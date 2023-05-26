@@ -1,15 +1,15 @@
-#include "reventbus_def.h"
+#include "platform_def.h"
 #include "cmsis_os2.h"
 
-reb_event_id reb_event_create(void)
+pf_event_id pf_event_create(void)
 {
     osEventFlagsId_t event = NULL;
     event = osEventFlagsNew(NULL);
 
-    return (reb_event_id)event;
+    return (pf_event_id)event;
 }
 
-uint32_t reb_event_recv(reb_event_id event, uint32_t flags)
+uint32_t pf_event_recv(pf_event_id event, uint32_t flags)
 {
     uint32_t flag = 0;
     if (event == NULL) {
@@ -19,7 +19,7 @@ uint32_t reb_event_recv(reb_event_id event, uint32_t flags)
     return flag;
 }
 
-reb_err_t reb_event_send(reb_event_id event, uint32_t flags)
+pf_err_t pf_event_send(pf_event_id event, uint32_t flags)
 {
     if (event == NULL) {
         return RALARM_ERROR;
@@ -30,7 +30,7 @@ reb_err_t reb_event_send(reb_event_id event, uint32_t flags)
     return RALARM_ERROR;
 }
 
-void reb_event_delete(reb_event_id event)
+void pf_event_delete(pf_event_id event)
 {
     if (event == NULL) {
         return;

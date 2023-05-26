@@ -1,7 +1,7 @@
-#include "reventbus_def.h"
+#include "platform_def.h"
 #include "cmsis_os2.h"
 
-reb_task_id reb_task_create(reb_task_func func, void *arg, const struct reb_task_attr *attr)
+pf_task_id pf_task_create(pf_task_func func, void *arg, const struct pf_task_attr *attr)
 {
     osThreadId_t thread = NULL;
     osThreadAttr_t task_attr = {
@@ -17,10 +17,10 @@ reb_task_id reb_task_create(reb_task_func func, void *arg, const struct reb_task
     };
 
     thread = osThreadNew((osThreadFunc_t)func, arg, &task_attr);
-    return (reb_task_id)thread;
+    return (pf_task_id)thread;
 }
 
-void reb_task_delete(reb_task_id thread)
+void pf_task_delete(pf_task_id thread)
 {
     if(thread != NULL) {
         osThreadTerminate(thread);
