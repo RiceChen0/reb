@@ -1,4 +1,4 @@
 依赖仓库：
 
-- rplatform：https://gitee.com/RiceChen0/rplatform
-- rthread_pool：https://gitee.com/RiceChen0/rthread_pool
+- rplatform：https://github.com/RiceChen0/rplatform
+- rthread_pool：https://github.com/RiceChen0/rthread_pool
