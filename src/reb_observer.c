@@ -6,3 +6,171 @@
 
 #include "reb_observer.h"
 
+static int observer_create(observer_base *base, uint32_t event, obs_trigger_cb trigger, void *arg)
+{
+    reb_list_init(&base->node);
+    base->event = event;
+    base->trigger = trigger;
+    base->arg = arg;
+    return REB_OK;
+}
+
+static void observer_default_trigger(observer_base *base, uint32_t event, void *data)
+{
+    observer_default *obs = reb_container_of(base, observer_default, base);
+
+    if(obs->cb) {
+        obs->cb(event, data, obs->base.arg);
+    }
+}
+
+observer_base *observer_default_create(uint32_t event,
+                                       obs_default_cb cb,
+                                       void *arg)
+{
+    observer_default *obs = NULL;
+    
+    obs = REB_MALLOC(sizeof(observer_default));
+    if(obs == NULL) {
+        REB_LOGE("Failed to create observer for default mode, event type: 0x%08x", event);
+        return NULL;
+    }
+    memset(obs, 0, sizeof(observer_default));
+
+    observer_create(&obs->base, event, observer_default_trigger, arg);
+    obs->base.mode = OBS_MODE_DEFAULT;
+    obs->cb = cb;
+    return &obs->base;
+}
+
+static void observer_signal_trigger(observer_base *base, uint32_t event, void *data)
+{
+    observer_signal *obs = reb_container_of(base, observer_signal, base);
+    reb_sem_unlock(obs->signal);
+}
+
+observer_base *observer_signal_create(uint32_t event)
+{
+    observer_signal *obs = NULL;
+    
+    obs = REB_MALLOC(sizeof(observer_signal));
+    if(obs == NULL) {
+        REB_LOGE("Failed to create observer for signal mode, event type: 0x%08x", event);
+        return NULL;
+    }
+    memset(obs, 0, sizeof(observer_signal));
+
+    observer_create(&obs->base, event, observer_signal_trigger, NULL);
+    obs->base.mode = OBS_MODE_SIGNAL;
+    obs->signal = reb_sem_create(1);
+    if(obs->signal == NULL) {
+        REB_LOGE("Observer of signal mode: create sem failed");
+        REB_FREE(obs);
+        obs = NULL;
+        return NULL;
+    }
+
+    return &obs->base;
+}
+
+reb_status observer_signal_wait(observer_base *base, reb_time_t timeout)
+{
+    observer_signal *obs = reb_container_of(base, observer_signal, base);
+    return reb_sem_lock(obs->signal, timeout);
+}
+
+static void observer_callback_trigger(observer_base *base, uint32_t event, void *data)
+{
+    observer_callback *obs = reb_container_of(base, observer_callback, base);
+
+    if(obs->cb) {
+        obs->cb(event, data, obs->base.arg);
+    }
+}
+
+observer_base *observer_callback_create(uint32_t event,
+                                        obs_callback_cb cb,
+                                        void *arg)
+{
+    observer_callback *obs = NULL;
+    
+    obs = REB_MALLOC(sizeof(observer_callback));
+    if(obs == NULL) {
+        REB_LOGE("Failed to create observer for callback mode, event type: 0x%08x", event);
+        return NULL;
+    }
+    memset(obs, 0, sizeof(observer_callback));
+
+    observer_create(&obs->base, event, observer_callback_trigger, arg);
+    obs->base.mode = OBS_MODE_CALLBACK;
+    obs->cb = cb;
+    return &obs->base;
+}
+
+void task_trigger_handle(void *arg)
+{
+    observer_task *obs = (observer_task *)arg;
+
+    obs->run(obs->event, obs->data, obs->base.arg);
+    reb_task_delete(obs->task);
+}
+
+static void observer_task_trigger(observer_base *base, uint32_t event, void *data)
+{
+    observer_task *obs = reb_container_of(base, observer_task, base);
+    reb_task_attr task_attr = {
+        .name = "obs_task",
+        .priority = obs->prio,
+        .stack_size = obs->stack_size,
+    };
+
+    obs->event = event;
+    obs->data = data;
+
+    if(obs->task) {
+        REB_LOGE("Task still running");
+        return;
+    }
+
+    obs->task = reb_task_create(task_trigger_handle, obs, &task_attr);
+    if(obs->task == NULL) {
+        REB_LOGE("Observer of task mode: create task failed");
+        return;
+    }
+}
+
+observer_base *observer_task_create(uint32_t event,
+                                    obs_task_cb run,
+                                    void *arg,
+                                    uint32_t stack_size,
+                                    uint32_t prio)
+{
+    observer_task *obs = NULL;
+    
+    obs = REB_MALLOC(sizeof(observer_task));
+    if(obs == NULL) {
+        REB_LOGE("Failed to create observer for task mode, event type: 0x%08x", event);
+        return NULL;
+    }
+    memset(obs, 0, sizeof(observer_task));
+
+    observer_create(&obs->base, event, observer_task_trigger, arg);
+    obs->base.mode = OBS_MODE_TASK;
+    obs->run = run;
+    obs->stack_size = stack_size;
+    obs->prio = prio;
+
+    return &obs->base;
+}
+
+reb_status observer_delete(observer_base *base)
+{
+    if(base == NULL) {
+        return REB_INVAL;
+    }
+    if(base->state != OBS_STATE_IDLE) {
+        return REB_ERROR;
+    }
+    REB_FREE(base);
+    return 0;
+}
