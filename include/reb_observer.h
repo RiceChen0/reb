@@ -47,7 +47,8 @@ typedef struct {
     obs_default_cb cb;
 } observer_default;
 
-observer_base *observer_default_create(uint32_t event,
+observer_base *observer_default_create(uint16_t type,
+                                       uint16_t sub_type,
                                        obs_default_cb cb,
                                        void *arg);
 
@@ -56,7 +57,7 @@ typedef struct {
     reb_sem_id signal;
 } observer_signal;
 
-observer_base *observer_signal_create(uint32_t event);
+observer_base *observer_signal_create(uint16_t type, uint16_t sub_type);
 reb_status observer_signal_wait(observer_base *base, reb_time_t timeout);
 
 typedef void (*obs_callback_cb)(uint32_t event, void *data, void *arg);
@@ -66,7 +67,8 @@ typedef struct {
     obs_callback_cb cb;
 } observer_callback;
 
-observer_base *observer_callback_create(uint32_t event,
+observer_base *observer_callback_create(uint16_t type,
+                                        uint16_t sub_type,
                                         obs_callback_cb cb,
                                         void *arg);
 
@@ -82,7 +84,8 @@ typedef struct {
     void *data;
 } observer_task;
 
-observer_base *observer_task_create(uint32_t event,
+observer_base *observer_task_create(uint16_t type,
+                                    uint16_t sub_type,
                                     obs_task_cb run,
                                     void *arg,
                                     uint32_t stack_size,

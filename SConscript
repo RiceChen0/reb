@@ -7,6 +7,9 @@ src = Split('''
 src/reb_broker.c
 src/reb_observer.c
 src/reb_publisher.c
+adapter/rtthread/reb_mutex.c
+adapter/rtthread/reb_sem.c
+adapter/rtthread/reb_task.c
 ''')
 
 CPPPATH = [cwd + '/include']

@@ -11,13 +11,23 @@
 extern "C" {
 #endif
 
-#define REB_ALL_MINOR_TYPE                                  (0xFFFF)
+#include "reb_observer.h"
 
-#define REB_MK_EVENT_TYPE(mojor, minor) \
-                                (((uint32_t)(mojor) << 16) | ((uint32_t)(minor) & 0xFFFF))
-#define REB_EVENT_MOJOR_TYPE(event)                         ((uint16_t)((event) >> 16))  
-#define REB_EVENT_MINOR_TYPE(event)                         ((uint32_t)(event) & 0xFFFF)
-#define REB_EVENT_TYPE_MOJOR_CMP(pub_event, sub_event)      (!((event1 ^ event2) & 0xFFFF0000))
+typedef struct {
+    int a;
+} broker_base;
+
+int broker_create(void);
+
+int broker_delete(void);
+
+int broker_observer_attach_once(observer_base *obs);
+
+int broker_observer_attach(observer_base *obs);
+
+int broker_observer_detach(observer_base *obs);
+
+int broker_publisher_send(uint16_t type, uint16_t sub_type, void *data, reb_time_t timeout);
 
 #ifdef __cplusplus
 }
