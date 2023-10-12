@@ -22,14 +22,14 @@ typedef enum {
 
 typedef enum {
     OBS_STATE_IDLE,
-    OBS_STATE_ATTACHED,
-    OBS_STATE_ATTACHED_ONCE,
-    OBS_STATE_DETACHED,
+    OBS_STATE_ATTACH,
+    OBS_STATE_ATTACH_ONCE,
+    OBS_STATE_DETACH,
 } observer_state;
 
 typedef struct observer_base observer_base;
 
-typedef void (*obs_trigger_cb)(observer_base *base, uint32_t event, void *data);
+typedef void (*obs_trigger_cb)(observer_base *base, uint32_t event, uint32_t data);
 
 struct observer_base{
     reb_list_t node;
@@ -40,7 +40,10 @@ struct observer_base{
     void *arg;
 };
 
-typedef void (*obs_default_cb)(uint32_t event, void *data, void *arg);
+/**
+ * Observer default mode
+ */
+typedef void (*obs_default_cb)(uint32_t event, uint32_t data, void *arg);
 
 typedef struct {
     observer_base base;
@@ -52,6 +55,10 @@ observer_base *observer_default_create(uint16_t type,
                                        obs_default_cb cb,
                                        void *arg);
 
+/**
+ * Observer signal mode
+ */
+
 typedef struct {
     observer_base base;
     reb_sem_id signal;
@@ -60,7 +67,11 @@ typedef struct {
 observer_base *observer_signal_create(uint16_t type, uint16_t sub_type);
 reb_status observer_signal_wait(observer_base *base, reb_time_t timeout);
 
-typedef void (*obs_callback_cb)(uint32_t event, void *data, void *arg);
+/**
+ * Observer callback mode
+ */
+
+typedef void (*obs_callback_cb)(uint32_t event, uint32_t data, void *arg);
 
 typedef struct {
     observer_base base;
@@ -72,7 +83,11 @@ observer_base *observer_callback_create(uint16_t type,
                                         obs_callback_cb cb,
                                         void *arg);
 
-typedef void (*obs_task_cb)(uint32_t event, void *data, void *arg);
+/**
+ * Observer task mode
+ */
+
+typedef void (*obs_task_cb)(uint32_t event, uint32_t data, void *arg);
 
 typedef struct {
     observer_base base;
@@ -81,7 +96,7 @@ typedef struct {
     uint32_t stack_size;
     uint32_t prio;
     uint32_t event;
-    void *data;
+    uint32_t data;
 } observer_task;
 
 observer_base *observer_task_create(uint16_t type,

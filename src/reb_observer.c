@@ -16,7 +16,7 @@ static int observer_create(observer_base *base, uint32_t event,
     return REB_OK;
 }
 
-static void observer_default_trigger(observer_base *base, uint32_t event, void *data)
+static void observer_default_trigger(observer_base *base, uint32_t event, uint32_t data)
 {
     observer_default *obs = reb_container_of(base, observer_default, base);
 
@@ -47,7 +47,7 @@ observer_base *observer_default_create(uint16_t type,
     return &obs->base;
 }
 
-static void observer_signal_trigger(observer_base *base, uint32_t event, void *data)
+static void observer_signal_trigger(observer_base *base, uint32_t event, uint32_t data)
 {
     observer_signal *obs = reb_container_of(base, observer_signal, base);
     reb_sem_unlock(obs->signal);
@@ -85,7 +85,7 @@ reb_status observer_signal_wait(observer_base *base, reb_time_t timeout)
     return reb_sem_lock(obs->signal, timeout);
 }
 
-static void observer_callback_trigger(observer_base *base, uint32_t event, void *data)
+static void observer_callback_trigger(observer_base *base, uint32_t event, uint32_t data)
 {
     observer_callback *obs = reb_container_of(base, observer_callback, base);
 
@@ -124,7 +124,7 @@ void task_trigger_handle(void *arg)
     reb_task_delete(obs->task);
 }
 
-static void observer_task_trigger(observer_base *base, uint32_t event, void *data)
+static void observer_task_trigger(observer_base *base, uint32_t event, uint32_t data)
 {
     observer_task *obs = reb_container_of(base, observer_task, base);
     reb_task_attr task_attr = {

@@ -10,6 +10,7 @@ src/reb_publisher.c
 adapter/rtthread/reb_mutex.c
 adapter/rtthread/reb_sem.c
 adapter/rtthread/reb_task.c
+adapter/rtthread/reb_queue.c
 ''')
 
 CPPPATH = [cwd + '/include']
