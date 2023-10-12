@@ -81,7 +81,7 @@ typedef uint32_t reb_time_t;
 
 /**
  * Task API
-*/
+ */
 typedef void *reb_task_id;
 
 typedef struct reb_task_attr{
@@ -97,7 +97,7 @@ void reb_task_delete(reb_task_id task);
 
 /**
  * Mutex API
-*/
+ */
 typedef void *reb_mutex_id;
 
 reb_mutex_id reb_mutex_create(void);
@@ -107,7 +107,7 @@ void reb_mutex_delete(reb_mutex_id mutex);
 
 /**
  * Sem API
-*/
+ */
 typedef void *reb_sem_id;
 
 reb_sem_id reb_sem_create(uint32_t value);
@@ -116,8 +116,21 @@ reb_status reb_sem_unlock(reb_sem_id sem);
 void reb_sem_delete(reb_sem_id sem);
 
 /**
+ * Queue API
+ */
+typedef void *reb_queue_id;
+
+reb_queue_id reb_queue_create(int size, int count);
+reb_status reb_queue_send(reb_queue_id queue, const void *msg,
+                          uint32_t size, reb_time_t timeout);
+reb_status reb_queue_urgent_send(reb_queue_id queue, const void *msg,
+                                 uint32_t size, reb_time_t timeout);
+reb_status reb_queue_recv(reb_queue_id queue, void *msg, uint32_t size);
+void reb_queue_delete(reb_queue_id queue);
+
+/**
  * List Api
-*/
+ */
 struct reb_list_node {
     struct reb_list_node *next;
     struct reb_list_node *prev;
@@ -178,14 +191,6 @@ REB_INLINE int reb_list_len(const reb_list_t *l)
 
 #define reb_list_for_each(pos, head)                                            \
     for (pos = (head)->next; pos != (head); pos = pos->next)
-
-#define REB_ALL_MINOR_TYPE                                  (0xFFFF)
-
-#define REB_MK_EVENT_TYPE(mojor, minor) \
-                                (((uint32_t)(mojor) << 16) | ((uint32_t)(minor) & 0xFFFF))
-#define REB_EVENT_MOJOR_TYPE(event)                         ((uint16_t)((event) >> 16))  
-#define REB_EVENT_MINOR_TYPE(event)                         ((uint32_t)(event) & 0xFFFF)
-#define REB_EVENT_TYPE_MOJOR_CMP(pub_event, sub_event)      (!((pub_event ^ sub_event) & 0xFFFF0000))
 
 #ifdef __cplusplus
 }
