@@ -14,7 +14,6 @@ extern "C" {
 #include "reb_def.h"
 
 typedef enum {
-    OBS_MODE_DEFAULT,
     OBS_MODE_SIGNAL,
     OBS_MODE_CALLBACK,
     OBS_MODE_TASK,
@@ -39,21 +38,6 @@ struct observer_base{
     obs_trigger_cb trigger;
     void *arg;
 };
-
-/**
- * Observer default mode
- */
-typedef void (*obs_default_cb)(uint32_t event, uint32_t data, void *arg);
-
-typedef struct {
-    observer_base base;
-    obs_default_cb cb;
-} observer_default;
-
-observer_base *observer_default_create(uint16_t type,
-                                       uint16_t sub_type,
-                                       obs_default_cb cb,
-                                       void *arg);
 
 /**
  * Observer signal mode

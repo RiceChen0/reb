@@ -29,7 +29,7 @@ reb_status reb_queue_urgent_send(reb_queue_id queue, const void *msg,
 
 reb_status reb_queue_recv(reb_queue_id queue, void *msg, uint32_t size)
 {
-    if(rt_mq_recv((rt_mq_t)queue, msg, size, RT_WAITING_FOREVER) == RT_EOK) {
+    if(rt_mq_recv((rt_mq_t)queue, msg, size, RT_WAITING_FOREVER) > 0) {
         return REB_OK;
     }
     return REB_ERROR;

@@ -15,17 +15,18 @@ extern "C" {
 
 typedef struct {
     reb_list_t obs_head;
+    reb_mutex_id lock;
 } broker_base;
 
-int broker_create(void);
+reb_status broker_create(void);
 
-int broker_delete(void);
+reb_status broker_delete(void);
 
-int broker_observer_attach_once(observer_base *obs);
+reb_status broker_observer_attach_once(observer_base *obs);
 
-int broker_observer_attach(observer_base *obs);
+reb_status broker_observer_attach(observer_base *obs);
 
-int broker_observer_detach(observer_base *obs);
+reb_status broker_observer_detach(observer_base *obs);
 
 #ifdef __cplusplus
 }

@@ -26,7 +26,6 @@ extern "C" {
  */
 #define REB_PUBLISHER_QUEUE_MSG_COUNT                 (10)
 
-
 #ifdef __cplusplus
 }
 #endif

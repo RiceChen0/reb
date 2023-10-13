@@ -13,7 +13,7 @@ extern "C" {
 
 #include "reb_def.h"
 
-typedef void (*pub_notify)(uint32_t event, uint32_t data, bool free);
+typedef void (*pub_notify)(uint32_t event, uint32_t data, bool need_free);
 
 reb_status publisher_factory_create(pub_notify notify);
 

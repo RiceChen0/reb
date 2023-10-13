@@ -47,7 +47,12 @@ typedef enum {
 #define REB_LOGI_EN             1
 
 #ifndef REB_PRINT
+#ifdef __RTTHREAD__
+    #include <rtthread.h>
+    #define REB_PRINT           rt_kprintf
+#else
     #define REB_PRINT           printf
+#endif
 #endif
 
 #ifndef REB_PRINT_TAG
@@ -72,7 +77,8 @@ typedef enum {
 
 #if REB_LOGD_EN
 #define REB_LOGD(...)           REB_PRINT("[D/%s](%s:%d) ", REB_PRINT_TAG, __FUNCTION__, __LINE__); \
-                                REB_PRINT(__VA_ARGS__);   
+                                REB_PRINT(__VA_ARGS__); \
+                                REB_PRINT("\n");  
 #else
 #define REB_LOGD(x)
 #endif
@@ -83,7 +89,7 @@ typedef enum {
                                         (((uint32_t)(mojor) << 16) | ((uint32_t)(minor) & 0xFFFF))
 #define REB_EVENT_MOJOR_TYPE(event)                         ((uint16_t)((event) >> 16))  
 #define REB_EVENT_MINOR_TYPE(event)                         ((uint32_t)(event) & 0xFFFF)
-#define REB_EVENT_TYPE_MOJOR_CMP(pub_type, sub_type)        (!((pub_type ^ sub_type) & 0xFFFF0000))
+#define REB_EVENT_TYPE_MOJOR_CMP(pub_type, obs_type)        (!((pub_type ^ obs_type) & 0xFFFF0000))
 
 typedef uint32_t reb_time_t;
 

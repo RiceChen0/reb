@@ -15,7 +15,7 @@ reb_status reb_sem_lock(reb_sem_id sem, reb_time_t timeout)
         return REB_INVAL;
     }
     rt_sem_take((rt_sem_t)sem, timeout);
-    return REB_ERROR;
+    return REB_OK;
 }
 
 reb_status reb_sem_unlock(reb_sem_id sem)
@@ -24,7 +24,7 @@ reb_status reb_sem_unlock(reb_sem_id sem)
         return REB_INVAL;
     }
     rt_sem_release((rt_sem_t)sem);
-    return REB_ERROR;
+    return REB_OK;
 }
 
 void reb_sem_delete(reb_sem_id sem)

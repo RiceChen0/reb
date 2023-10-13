@@ -16,7 +16,7 @@ adapter/rtthread/reb_queue.c
 CPPPATH = [cwd + '/include']
 
 if GetDepend(['PKG_USING_REB_EXAMPLE']):
-    src += ['example/reb_rtt_example.cpp']
+    src += ['example/reb_rtt_example.c']
 
 group = DefineGroup('reb', src, depend = [''], CPPPATH = CPPPATH)
 Return('group')
