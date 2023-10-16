@@ -35,7 +35,7 @@ REB(Rice Event Broker)全称事件代理，REB框架采用设计模式中的观�
 
 ##### REB框架图
 
-![](https://ricechen0.gitee.io/picture/REB/flow.png)
+![](./pic/flow.png)
 
 ##### REB框架说明
 
@@ -410,4 +410,4 @@ int reb_test(void)
 MSH_CMD_EXPORT(reb_test, Rice Event broker test);
 ```
 
-![](https://ricechen0.gitee.io/picture/REB/1.png)
+![](./pic/result.png)
