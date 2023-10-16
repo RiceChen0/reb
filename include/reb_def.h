@@ -43,8 +43,8 @@ typedef enum {
  * debug API
 */
 #define REB_LOGE_EN             1
-#define REB_LOGD_EN             1
-#define REB_LOGI_EN             1
+#define REB_LOGD_EN             0
+#define REB_LOGI_EN             0
 
 #ifndef REB_PRINT
 #ifdef __RTTHREAD__
@@ -64,7 +64,7 @@ typedef enum {
                                 REB_PRINT(__VA_ARGS__); \
                                 REB_PRINT("\033[0m\n")
 #else
-#define REB_LOGE(x)
+#define REB_LOGE(...)
 #endif
 
 #if REB_LOGI_EN
@@ -72,7 +72,7 @@ typedef enum {
                                 REB_PRINT(__VA_ARGS__); \
                                 REB_PRINT("\033[0m\n")
 #else
-#define REB_LOGI(x)
+#define REB_LOGI(...)
 #endif
 
 #if REB_LOGD_EN
@@ -80,7 +80,7 @@ typedef enum {
                                 REB_PRINT(__VA_ARGS__); \
                                 REB_PRINT("\n");  
 #else
-#define REB_LOGD(x)
+#define REB_LOGD(...)
 #endif
 
 #define REB_ALL_MINOR_TYPE                                  (0xFFFF)

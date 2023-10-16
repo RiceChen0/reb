@@ -10,7 +10,7 @@ observer_base *obs_task;
 void sig_thread_handle(void *arg)
 {
     while(1) {
-        if(observer_signal_wait(obs_signal, RT_WAITING_FOREVER) == REB_OK) {
+        if(observer_signal_wait(obs_signal, (reb_time_t)RT_WAITING_FOREVER) == REB_OK) {
             rt_kprintf("signal: recv success\r\n");        
         }
     }
@@ -55,6 +55,7 @@ int reb_test(void)
     publisher_send(1, 1, (int)data, 1000);
     publisher_send(1, 2, (int)data, 1000);
     publisher_send(1, 3, (int)data, 1000);
+    return RT_EOK;
 }
 MSH_CMD_EXPORT(reb_test, Rice Event broker test);
 

@@ -106,6 +106,10 @@ static void observer_task_trigger(observer_base *base, uint32_t event, uint32_t 
         .stack_size = obs->stack_size,
     };
 
+    if(obs->task != NULL) {
+        return;
+    }
+
     obs->event = event;
     obs->data = data;
 
