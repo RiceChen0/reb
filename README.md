@@ -57,12 +57,18 @@ REB(Rice Event Broker)全称事件代理，REB框架采用设计模式中的观�
 │  |   ├─reb_queue.c            // cmsis queue适配层
 │  |   ├─reb_sem.c              // cmsis sem适配层
 │  |   └─reb_task.c             // cmsis task适配层
+│  ├─ohos_liteos_m                      
+│  |   ├─reb_mutex.c            // ohos liteos-m mutex适配层
+│  |   ├─reb_queue.c            // ohos liteos-m queue适配层
+│  |   ├─reb_sem.c              // ohos liteos-m sem适配层
+│  |   └─reb_task.c             // ohos liteos-m task适配层
 │  └─rtthread                   
 │      ├─reb_mutex.c            // rtthread mutex适配层
 │      ├─reb_queue.c            // rtthread queue适配层
 │      ├─reb_sem.c              // rtthread sem适配层
 │      └─reb_task.c             // rtthread task适配层
-├─example                       
+├─example 
+│  ├─reb_ohos_example.c         // ohos liteos-m 平台实例                     
 │  └─reb_rtt_example.c          // rtthread 平台实例
 ├─include
 │  ├─reb_broker.h               // reb 中间人的头文件
