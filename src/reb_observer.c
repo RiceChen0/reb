@@ -95,6 +95,9 @@ void task_trigger_handle(void *arg)
     observer_task *obs = (observer_task *)arg;
 
     obs->run(obs->event, obs->data, obs->base.arg);
+
+    reb_task_delete(NULL);
+    obs->task = NULL;
 }
 
 static void observer_task_trigger(observer_base *base, uint32_t event, uint32_t data)

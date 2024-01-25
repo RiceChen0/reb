@@ -25,5 +25,9 @@ reb_status reb_task_resume(reb_task_id task)
 
 void reb_task_delete(reb_task_id task)
 {
+    if(task == NULL)
+    {
+        return;
+    }
     rt_thread_delete((rt_thread_t)task);
 }

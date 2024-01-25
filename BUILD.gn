@@ -1,0 +1,41 @@
+import("//kernel/liteos_m/liteos.gni")
+
+static_library("reb") {
+  asmflags = board_asmflags
+
+  sources = [
+    "src/reb_broker.c",
+    "src/reb_observer.c",
+    "src/reb_publisher.c",
+    "adapter/ohos_liteos_m/reb_mutex.c",
+    "adapter/ohos_liteos_m/reb_queue.c",
+    "adapter/ohos_liteos_m/reb_sem.c",
+    "adapter/ohos_liteos_m/reb_task.c",
+  ]
+
+  sources += [ "example/reb_ohos_example.c" ]
+
+  include_dirs = [ "include" ]
+}
+
+config("public") {
+  ldflags = [
+    "-nostartfiles",
+    "-Wl,-T" + rebase_path("liteos.ld"),
+    "-nostdlib",
+  ]
+
+  libs = [
+    "nosys",
+    "gcc",
+  ]
+
+  if (defined(LOSCFG_LIBC_NEWLIB)) {
+    ldflags -= [ "-nostdlib" ]
+    libs -= [ "nosys" ]
+    libs += [
+      "c",
+      "m",
+    ]
+  }
+}
